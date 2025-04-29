@@ -1,23 +1,84 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@layer reset {
+  /* Tailwind's reset */
 }
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  :root {
+    --color-primary: #1e40af;
+    --color-primary-light: #3b82f6;
+    --color-primary-lighter: #93c5fd;
+    --color-primary-dark: #1e3a8a;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 5rem;
+  }
+
+  body {
+    color: #333;
+    background: white;
+  }
 }
 
-@theme {
-  --animate-fade-in: fade-in 1s ease-out;
+@layer components {
+  .typewriter {
+    overflow: hidden;
+    border-right: 0.15em solid var(--primary-light);
+    white-space: nowrap;
+    margin: 0 auto;
+    animation: typing 3.5s steps(40, end), blink-caret 0.75s step-end infinite;
+  }
 
-  @keyframes fade-in {
+  .fade-in {
+    animation: fadeIn 1s ease-in;
+  }
+
+  .tech-stack-icon {
+    transition: all 0.3s ease;
+  }
+
+  .tech-stack-icon:hover {
+    transform: translateY(-5px);
+  }
+
+  .project-card {
+    transition: transform 0.3s ease;
+  }
+
+  .project-card:hover {
+    transform: translateY(-5px);
+  }
+}
+
+@layer utilities {
+  @keyframes typing {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+
+  @keyframes blink-caret {
+    from,
+    to {
+      border-color: transparent;
+    }
+    50% {
+      border-color: var(--primary-light);
+    }
+  }
+
+  @keyframes fadeIn {
     0% {
-      opacity: 0%;
+      opacity: 0;
     }
     100% {
-      opacity: 100%;
+      opacity: 1;
     }
   }
 }

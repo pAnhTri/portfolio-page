@@ -1,127 +1,99 @@
 "use client";
 
+import { cn } from "@/lib/utils/cn";
 import Link from "next/link";
-import { useState } from "react";
-import {
-  FaBars,
-  FaTimes,
-  FaLinkedin,
-  FaGithub,
-  FaEnvelope,
-  FaPhoneAlt,
-} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { FiMenu, FiX } from "react-icons/fi";
 
-const sections = [
-  { id: "about", label: "About" },
-  { id: "projects", label: "Projects" },
+const navItems = [
+  { name: "Testimonials", href: "#testimonials" },
+  { name: "Projects", href: "#projects" },
+  { name: "Skills", href: "#skills" },
+  { name: "Contact", href: "#contact" },
 ];
 
-const socialLinks = [
-  {
-    id: "linkedin",
-    label: "My Profile",
-    url: "https://www.linkedin.com/in/anh-tri-pham-12576a1a9",
-    icon: <FaLinkedin />,
-  },
-  {
-    id: "github",
-    label: "My Repo",
-    url: "https://github.com/pAnhTri",
-    icon: <FaGithub />,
-  },
-  {
-    id: "email",
-    label: "E-Mail Me",
-    url: "mailto:anhtp5@uci.edu",
-    icon: <FaEnvelope />,
-  },
-  {
-    id: "phone",
-    label: "Call Me",
-    url: "tel:+14086096660",
-    icon: <FaPhoneAlt />,
-  },
-];
+const Navbar = () => {
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
 
-const NavBar = () => {
-  const [isExpanded, setIsExpanded] = useState(false);
+  // Add a scroll listener on mount
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    // Cleanup on unmount
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <header className="w-full sticky top-0 z-50 bg-gradient-to-r from-blue-800 via-blue-600 to-blue-400 shadow-lg">
-      {/* Standard Navbar (Visible on medium/large screens) */}
-      <nav className="hidden sm:flex justify-center items-center w-full h-[10vh] p-3 backdrop-blur-md bg-white/10">
-        {/* Section Links */}
-        {sections.map((section) => (
+    <nav
+      className={cn(
+        "fixed w-full z-50 transition-all duration-300",
+        isScrolled
+          ? "bg-white/90 backdrop-blur-md shadow-md py-2"
+          : "bg-transparent py-4"
+      )}
+    >
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between">
           <Link
-            key={section.id}
-            href={section.id === "about" ? "/" : `/#${section.id}`}
-            className="text-white px-4 py-2 rounded-md hover:bg-white/20 hover:scale-105 transition-transform duration-200"
+            href="#hero"
+            className="text-2xl font-bold text-blue-800 hover:text-blue-600 transition-colors"
           >
-            {section.label}
+            Who am I?
           </Link>
-        ))}
 
-        {/* Social Links with Text */}
-        {socialLinks.map((link) => (
-          <a
-            key={link.id}
-            href={link.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-white px-4 py-2 rounded-md flex items-center gap-2 hover:bg-white/20 hover:scale-105 transition-transform duration-200"
-          >
-            {link.icon}
-            {link.label}
-          </a>
-        ))}
-      </nav>
-
-      {/* Collapsed Menu for Small Screens */}
-      <div className="sm:hidden absolute left-1 z-50 flex flex-col items-start gap-2">
-        {/* Hamburger / Close Button */}
-        <button
-          className="w-12 h-12 rounded-full flex items-center justify-center text-blue-600 text-2xl bg-white/90 shadow-md shadow-blue-300 hover:scale-105 transition-transform duration-200"
-          onClick={() => setIsExpanded(!isExpanded)}
-        >
-          {isExpanded ? <FaTimes /> : <FaBars />}
-        </button>
-
-        {/* Expanded Menu (Flow Down Animation) */}
-        <div
-          className={`flex flex-col items-start pl-2 gap-2 overflow-hidden transition-all duration-300 ${
-            isExpanded ? "max-h-60 opacity-100" : "max-h-0 opacity-0"
-          }`}
-        >
-          {/* Section Links - Expanded with Rounded Rectangle */}
-          {sections.map((section) => (
-            <Link
-              key={section.id}
-              href={section.id === "about" ? "/" : `/#${section.id}`}
-              className="w-28 h-10 bg-white/90 text-blue-600 rounded-xl flex items-center justify-start px-4 shadow-md shadow-blue-300 hover:scale-105 transition-transform duration-200"
-              onClick={() => setIsExpanded(false)}
-            >
-              {section.label}
-            </Link>
-          ))}
-
-          {/* Social Links as Circle Icons Only */}
-          <div className="flex gap-2 pt-2">
-            {socialLinks.map((link) => (
-              <a
-                key={link.id}
-                href={link.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-10 h-10 bg-white/90 text-blue-600 rounded-full flex items-center justify-center shadow-lg shadow-blue-300 hover:scale-110 transition-transform duration-200"
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex gap-4">
+            {navItems.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={cn(
+                  "font-medium hover:text-blue-600 transition-color",
+                  isScrolled ? "text-blue-800" : "text-blue-700"
+                )}
               >
-                {link.icon}
-              </a>
+                {item.name}
+              </Link>
             ))}
           </div>
+
+          {/* Mobile Navigation Toggle */}
+          <button
+            className="md:hidden text-blue-800"
+            onClick={() => setIsMobileOpen(!isMobileOpen)}
+            aria-label="Toggle menu"
+          >
+            {isMobileOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+          </button>
         </div>
+        {/* Mobile Navigation Menu */}
+        {isMobileOpen && (
+          <div className="md:hidden mt-4 py-4 bg-white rounded-lg shadow-lg">
+            <div className="flex flex-col px-4 gap-4">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="font-medium text-blue-800 hover:text-blue-600 transition-colors"
+                  onClick={() => setIsMobileOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
-    </header>
+    </nav>
   );
 };
 
-export default NavBar;
+export default Navbar;

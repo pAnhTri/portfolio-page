@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-
+import { Inter } from "next/font/google";
+import { cn } from "@/lib/utils/cn";
 import "./globals.css";
-import NavBar from "@/components/NavBar";
-import Footer from "@/components/Footer";
-import { Analytics } from "@vercel/analytics/next";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Anh-Tri Pham's Portfolio Page",
@@ -17,12 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="flex flex-col min-h-screen antialiased">
-        <NavBar />
-        <main className="flex-grow">{children}</main>
-        <Analytics />
-        <Footer />
-      </body>
+      <body className={cn(`${inter.className} antialiased`)}>{children}</body>
     </html>
   );
 }
